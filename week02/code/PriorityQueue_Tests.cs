@@ -6,23 +6,40 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 public class PriorityQueueTests
 {
     [TestMethod]
-    // Scenario: 
-    // Expected Result: 
-    // Defect(s) Found: 
+    // Scenario: Create a queue with bob(1), sally(1), george(4), phil(3), and larry(4)
+    // Then iterate until the queue is empty
+    // Expected Result: [george, larry, phil, bob, sally]
+    // Defect(s) Found: Objects weren't being removed from the queue at all when dequeueing 😬
+
     public void TestPriorityQueue_1()
     {
         var priorityQueue = new PriorityQueue();
-        Assert.Fail("Implement the test case and then remove this.");
+        priorityQueue.Enqueue("Bob", 1);
+        priorityQueue.Enqueue("Sally", 1);
+        priorityQueue.Enqueue("George", 4);
+        priorityQueue.Enqueue("Phil", 3);
+        priorityQueue.Enqueue("Larry", 4);
+        List<string> expected = ["George", "Larry", "Phil", "Bob", "Sally"];
+        for (var i = 0; i < 5; i++) {
+            var tmpPerson = priorityQueue.Dequeue();
+            Assert.AreEqual(tmpPerson, expected[i]);
+        }
     }
 
     [TestMethod]
-    // Scenario: 
-    // Expected Result: 
-    // Defect(s) Found: 
+    // Scenario: Attempt to Dequeue with an empty queue
+    // Expected Result: Throw a relevant error
+    // Defect(s) Found: None (?)
     public void TestPriorityQueue_2()
     {
         var priorityQueue = new PriorityQueue();
-        Assert.Fail("Implement the test case and then remove this.");
+        try {
+            var tmpTest = priorityQueue.Dequeue();
+            Assert.Fail("b r u h (Error should've been thrown)");
+        }
+        catch (InvalidOperationException e) {
+            Assert.AreEqual("The queue is empty.", e.Message);
+        }
     }
 
     // Add more test cases as needed below.
