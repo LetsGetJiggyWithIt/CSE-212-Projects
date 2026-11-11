@@ -1,4 +1,6 @@
-﻿public class DuplicateCounter
+﻿using System.Dynamic;
+
+public class DuplicateCounter
 {
     //Count how many duplicates are in a collection of data.
 
@@ -25,6 +27,10 @@
     private static int CountDuplicates(int[] data)
     {
         // Add code here.
-        return 0;
+        var tmpList = new HashSet<int>(10);
+        for (int i = 0; i < data.Count(); i++) {
+            tmpList.Add(data[i]);
+        }
+        return data.Length - tmpList.Count;
     }
 }
