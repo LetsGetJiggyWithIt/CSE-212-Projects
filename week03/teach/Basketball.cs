@@ -27,10 +27,24 @@ public class Basketball
             var fields = reader.ReadFields()!;
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+
+            if (!players.ContainsKey(playerId)) {
+                players.Add(playerId, points);
+            }
+            else {
+                players[playerId] += points;
+            }
         }
 
         Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
 
-        var topPlayers = new string[10];
+
+        //I ran out of time and didn't end up finishing my solution :(
+        int[] topScores = players.Values.ToArray();
+        Array.Sort(topScores);
+        var topPlayers = new string[0,0,0,0,0,0,0,0,0,0];
+        for (int i = 0; i < 10; i++) {
+            Console.WriteLine($"{i + 1}: Insert Player Name Here: {topScores[topScores.Length - i]}");
+        }
     }
 }
