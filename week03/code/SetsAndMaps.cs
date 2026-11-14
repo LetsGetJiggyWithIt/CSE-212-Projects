@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -22,7 +26,16 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var newWords = new HashSet<string>(words);
+        var pairs = new HashSet<string>();
+        foreach (string i in newWords) {
+            // Put simply: This line executes if a reveresed string exists, the "pairs" set doesn't already have it,
+            // and the reveresed string isn't the same forwards.
+            if (newWords.Contains($"{i[1]}{i[0]}") && !pairs.Contains($"{i[1]}{i[0]} & {i}") && i != $"{i[1]}{i[0]}") {
+                pairs.Add($"{i} & {i[1]}{i[0]}");
+            }
+        }
+        return pairs.ToArray();;
     }
 
     /// <summary>
@@ -43,8 +56,13 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            if (degrees.ContainsKey(fields[3])) {
+                degrees[fields[3]]++;
+            }
+            else {
+                degrees.Add(fields[3], 1);
+            }
         }
-
         return degrees;
     }
 
@@ -67,7 +85,63 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        
+        Dictionary<string, int> firstWord = new Dictionary<string, int>();
+        Dictionary<string, int> secondWord = new Dictionary<string, int>();
+
+        //To ignore spaces and cases
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+
+        //Makes sure the character count is the same
+        if (word1.Length != word2.Length) {
+            return false;
+        }
+
+        //Adds each character to their respective dictionary
+        for (int i = 0; i < word1.Length; i++) {
+            if (!firstWord.ContainsKey($"{word1[i]}")) {
+                firstWord.Add($"{word1[i]}", 1);
+            }
+            else {
+                firstWord[$"{word1[i]}"]++;
+            }
+            if (!secondWord.ContainsKey($"{word2[i]}")) {
+                secondWord.Add($"{word2[i]}", 1);
+            }
+            else {
+                secondWord[$"{word2[i]}"]++;
+            }
+        }
+
+        //Verifies that each Key/Value pair are the same, and that the matching character counts are equal
+        return firstWord.Count == firstWord.Intersect(secondWord).ToDictionary().Count;
+
+
+        //Leaving in the lines below to show some other methods I attempted
+
+        /*foreach (KeyValuePair<string, int> item in sorted1) {
+            Debug.WriteLine($"{item.Key}, {item.Value}");
+        }
+        foreach (KeyValuePair<string, int> item in sorted2) {
+            Debug.WriteLine($"{item.Key}, {item.Value}");
+        }*/
+        /*foreach (char letter in word2) {
+            if ($"{letter}" == " ") {
+                continue;
+            }
+            if (!firstWord.ContainsKey($"{letter}".ToLower()) || firstWord[$"{letter}".ToLower()] == 0) {
+                return false;
+            }
+            else if (firstWord[$"{letter}".ToLower()] > 0) {
+                firstWord[$"{letter}".ToLower()]--;
+            }
+        }*/
+        /*if (word1.Length == word2.Length && word1.Split(" ").Length == 1 && word2.Split(" ").Length == 1) {
+            for (int i = 0; i < word1.Length; i++) {
+
+            }
+        }*/
     }
 
     /// <summary>
@@ -101,6 +175,10 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        string[] finalList = new string[featureCollection.Features.Length];
+        for (int i = 0; i < featureCollection.Features.Length; i++) {
+            finalList[i] = $"{featureCollection.Features[i].Properties.Place} - Mag {featureCollection.Features[i].Properties.Mag}";
+        }
+        return finalList;
     }
 }
