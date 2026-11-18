@@ -33,6 +33,21 @@ public class LinkedList : IEnumerable<int>
     public void InsertTail(int value)
     {
         // TODO Problem 1
+        
+        // 1. Create new Node (tmpNode)
+        Node tmpNode = new(value);
+
+        // 1.5. Check if Linked List is empty, then set head and tail to tmpNode if empty
+        if (_tail is null) {
+            _tail = tmpNode;
+            _head = tmpNode;
+        }
+        // 2. Set .Prev for tmpNode, .Next for _tail, and make _tail = tmpNode
+        else {
+            tmpNode.Prev = _tail;
+            _tail.Next = tmpNode;
+            _tail = tmpNode;
+        }
     }
 
 
@@ -65,6 +80,18 @@ public class LinkedList : IEnumerable<int>
     public void RemoveTail()
     {
         // TODO Problem 2
+
+        // 1. Nullify head and tail if there's only one item
+        if (_head == _tail) {
+            _head = null;
+            _tail = null;
+        }
+        // 2. Remove only the tail otherwise
+        else if (_tail is not null) {
+            _tail!.Prev!.Next = null;
+            _tail =_tail.Prev;
+        }
+
     }
 
     /// <summary>
@@ -109,6 +136,37 @@ public class LinkedList : IEnumerable<int>
     public void Remove(int value)
     {
         // TODO Problem 3
+
+        // 1. If value == head.Data, call RemoveHead() (This covers both Head and single-item removal)
+        if (_head is null || _tail is null) {
+            Console.WriteLine("List is empty!");
+            return;
+        }
+        else if (value == _head.Data ) {
+            RemoveHead();
+        }
+        // 2. Else, start iterating with head.Next
+        else {
+            var current = _head.Next;
+            while (current != null) {
+                // 2.1 If current.Data == value...
+                if (current.Data == value) {
+                    // 2.1.1 If current.Next == null, call RemoveTail() (This covers Tail removal)
+                    if (current.Next == null) {
+                        RemoveTail();
+                    }
+                    // 2.1.2 Else, remove pointers to current (Covers removal from the middle)
+                    else {
+                        current.Next.Prev = current.Prev;
+                        current.Prev!.Next = current.Next;
+                    }
+                    // 2.1.3 Return
+                    return;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine("That item doesn't exist!");
+        }
     }
 
     /// <summary>
@@ -117,6 +175,20 @@ public class LinkedList : IEnumerable<int>
     public void Replace(int oldValue, int newValue)
     {
         // TODO Problem 4
+
+        // 1. Return if Linked List is empty
+        if (_head is null && _tail is null) {
+            return;
+        }
+        // 2. Iterate through the entire list
+        var current = _head;
+        while (current is not null ) {
+            // 2.1 If the current Data is equal to oldValue, set Data to newValue
+            if (current.Data == oldValue) {
+                current.Data = newValue;
+            }
+            current = current.Next;
+        }
     }
 
     /// <summary>
@@ -147,7 +219,11 @@ public class LinkedList : IEnumerable<int>
     public IEnumerable Reverse()
     {
         // TODO Problem 5
-        yield return 0; // replace this line with the correct yield return statement(s)
+        var current = _tail;
+        while (current is not null) {
+            yield return current.Data;
+            current = current.Prev;
+        }
     }
 
     public override string ToString()
