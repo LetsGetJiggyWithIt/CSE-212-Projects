@@ -186,6 +186,28 @@ public static class Recursion
         // TODO Start Problem 5
         // ADD CODE HERE
         
+
+        // Base Case: Move isn't valid
+        if (maze.IsValidMove(currPath, x, y) == false) {
+            return;
+        }
+
+        // Add currPath to results if the end is the current item
+        else if (maze.IsEnd(x, y)) {
+            currPath.Add((x,y));
+            results.Add(currPath.AsString());
+            Debug.WriteLine(currPath.AsString());
+            currPath.Remove((x,y));
+        }
+
+        else {
+            currPath.Add((x,y));
+            SolveMaze(results, maze, x + 1, y, currPath);
+            SolveMaze(results, maze, x - 1, y, currPath);
+            SolveMaze(results, maze, x, y + 1, currPath);
+            SolveMaze(results, maze, x, y - 1, currPath);
+            currPath.Remove((x,y));
+        }
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
 }
